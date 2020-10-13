@@ -11,3 +11,5 @@ openvidu-insecure-react
 Visit [docs.openvidu.io/en/stable/tutorials/openvidu-insecure-react/](http://docs.openvidu.io/en/stable/tutorials/openvidu-insecure-react/)
 
 [OpenViduLogo]: https://secure.gravatar.com/avatar/5daba1d43042f2e4e85849733c8e5702?s=120
+
+sudo docker run -p 4443:4443 --rm -e OPENVIDU_SECRET=MY_SECRET openvidu/openvidu-server-kms:2.15.0
