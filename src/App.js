@@ -1,6 +1,6 @@
 import axios from 'axios';
 import OV, { OpenVidu } from 'openvidu-browser';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import './App.css';
 import UserVideoComponent from './UserVideoComponent';
 
@@ -27,6 +27,8 @@ class App extends Component {
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
   }
+
+  videoTest = React.createRef();
 
   componentDidMount() {
     window.addEventListener('beforeunload', this.onbeforeunload);
@@ -203,12 +205,19 @@ class App extends Component {
       this.forceUpdate();
     }
   };
+  previewRecording = async() => {
+    if (this.state.localRecorder.state === 'FINISHED') {
+    await this.state.localRecorder.preview("teste");
+      this.forceUpdate();
+    }
+  };
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
 
     const localRecorder = this.state.localRecorder;
 
+    console.log('aaa', this.videoTest);
     console.log({ localRecorder });
 
     return (
@@ -223,6 +232,9 @@ class App extends Component {
 
         {localRecorder && localRecorder.state === 'FINISHED' && (
           <button onClick={this.downloadRecording}>Download</button>
+        )}
+        {localRecorder && localRecorder.state === 'FINISHED' && (
+          <button onClick={this.previewRecording}>Preview</button>
         )}
         {this.state.session === undefined ? (
           <div id="join">
@@ -311,6 +323,10 @@ class App extends Component {
                 </div>
               ))}
             </div>
+            {/* <video id="teste" width="120" height="120" controls>
+  Your browser does not support the video tag.
+</video> */}
+<div id="teste" ref={this.videoTest}></div>
           </div>
         ) : null}
       </div>
@@ -352,6 +368,7 @@ class App extends Component {
         })
         .catch((response) => {
           var error = Object.assign({}, response);
+          console.log(error);
           if (error.response.status === 409) {
             resolve(sessionId);
           } else {
